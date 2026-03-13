@@ -28,6 +28,7 @@ const EditClient = ({ open, setOpen }) => {
   };
 
   const [clientData, setClientData] = useState(initialClientState);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (currentClient) {
@@ -35,8 +36,23 @@ const EditClient = ({ open, setOpen }) => {
     }
   }, [currentClient]);
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const validate = () => {
+    const newErrors = {};
+    if (clientData.email && clientData.email.trim() && !isValidEmail(clientData.email))
+      newErrors.email = "Invalid email address";
+    return newErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     dispatch(updateUser(currentClient._id, clientData, "client"));
     setClientData(initialClientState);
     setOpen(false);
@@ -44,10 +60,14 @@ const EditClient = ({ open, setOpen }) => {
 
   const handleInputChange = (field, value) => {
     setClientData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
+    setErrors({});
   };
 
   return (
@@ -117,6 +137,8 @@ const EditClient = ({ open, setOpen }) => {
                     placeholder="Optional"
                     value={clientData?.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
+                    error={!!errors.email}
+                    helperText={errors.email || " "}
                   />
                 </td>
               </tr>

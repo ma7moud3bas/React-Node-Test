@@ -30,11 +30,14 @@ const CreateClient = ({ open, setOpen }) => {
   const [clientData, setClientData] = useState(initialClientState);
   const [errors, setErrors] = useState({});
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const validate = () => {
     const newErrors = {};
     if (!clientData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!clientData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!clientData.username.trim()) newErrors.username = "Username is required";
+    if (clientData.email.trim() && !isValidEmail(clientData.email)) newErrors.email = "Invalid email address";
     if (!clientData.phone.trim()) newErrors.phone = "Phone is required";
     return newErrors;
   };
@@ -137,6 +140,8 @@ const CreateClient = ({ open, setOpen }) => {
                       placeholder="Optional"
                       value={clientData.email}
                       onChange={(e) => handleChange("email", e.target.value)}
+                      error={!!errors.email}
+                      helperText={errors.email || " "}
                     />
                   </td>
                 </tr>
