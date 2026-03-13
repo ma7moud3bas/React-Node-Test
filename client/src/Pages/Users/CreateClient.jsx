@@ -37,7 +37,8 @@ const CreateClient = ({ open, setOpen }) => {
     if (!clientData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!clientData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!clientData.username.trim()) newErrors.username = "Username is required";
-    if (clientData.email.trim() && !isValidEmail(clientData.email)) newErrors.email = "Invalid email address";
+    if (!clientData.email.trim()) newErrors.email = "Email is required";
+    else if (!isValidEmail(clientData.email)) newErrors.email = "Invalid email address";
     if (!clientData.phone.trim()) newErrors.phone = "Phone is required";
     return newErrors;
   };
@@ -137,7 +138,7 @@ const CreateClient = ({ open, setOpen }) => {
                     <TextField
                       size="small"
                       fullWidth
-                      placeholder="Optional"
+                      placeholder=""
                       value={clientData.email}
                       onChange={(e) => handleChange("email", e.target.value)}
                       error={!!errors.email}

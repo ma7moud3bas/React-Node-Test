@@ -40,8 +40,8 @@ const EditClient = ({ open, setOpen }) => {
 
   const validate = () => {
     const newErrors = {};
-    if (clientData.email && clientData.email.trim() && !isValidEmail(clientData.email))
-      newErrors.email = "Invalid email address";
+    if (!clientData.email || !clientData.email.trim()) newErrors.email = "Email is required";
+    else if (!isValidEmail(clientData.email)) newErrors.email = "Invalid email address";
     return newErrors;
   };
 
@@ -134,7 +134,7 @@ const EditClient = ({ open, setOpen }) => {
                   <TextField
                     size="small"
                     fullWidth
-                    placeholder="Optional"
+                    placeholder=""
                     value={clientData?.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     error={!!errors.email}
